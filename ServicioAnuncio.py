@@ -24,7 +24,9 @@ grupo_de_anuncios = pd.read_csv('total_anuncios.csv', names=["id_anuncio", "fec_
 def union_de_drfms_pandas(grupo_campanias):
     df_total_campanias = pd.concat(grupo_campanias, ignore_index=True, sort=True)
     df_total_campanias['data_date_part'] = '27/10/2019'  # Util.obt_fecha_actual()
+    df_total_campanias.rename(columns={"WEBSITE_CTR": "SITIOWEB_CTR"})
     return df_total_campanias
+
 
 gpo_anunc_con_detalle = list()
 dto_credenciales = Dto.DtoCredenciales(id_cuenta='act_804059193122922',
@@ -50,7 +52,7 @@ for anuncio in grupo_de_anuncios.values.tolist():
     if contador == 4:
         nom_archivo = 'hist_anuncios_' + Util.obt_fecha_actual() + '.csv'
         print(nom_archivo)
-        dfrm_total_anuncios = Util.union_de_drfms_pandas(gpo_anunc_con_detalle)
+        dfrm_total_anuncios = union_de_drfms_pandas(gpo_anunc_con_detalle)
         df_sp_total_anuncios = Util.pandas_a_spark(sql_context, dfrm_total_anuncios)
         df_sp_total_anuncios.withColumnRenamed("WEBSITE_CTR", "SITIOWEB_CTR")
         df_sp_total_anuncios.coalesce(1).write.format('com.databricks.spark.csv').save(nom_archivo, header='true')
@@ -92,7 +94,7 @@ for anuncio in grupo_de_anuncios.values.tolist():
 
 nom_archivo = 'hist_anuncios_' + Util.obt_fecha_actual() + '.csv'
 print(nom_archivo)
-dfrm_total_anuncios = Util.union_de_drfms_pandas(gpo_anunc_con_detalle)
+dfrm_total_anuncios = union_de_drfms_pandas(gpo_anunc_con_detalle)
 df_sp_total_anuncios = Util.pandas_a_spark(sql_context, dfrm_total_anuncios)
 
 df_sp_total_anuncios.withColumnRenamed("WEBSITE_CTR", "SITIOWEB_CTR")
