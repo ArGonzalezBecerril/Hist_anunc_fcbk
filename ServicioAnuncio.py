@@ -2,7 +2,6 @@ import util.dto.DtoFacebook as Dto
 import sys
 import pyspark as pspk
 import pyspark.sql as pysql
-import findspark
 import modelo.Anuncio as camp
 import dao.facebook.DaoConsulta as daoCon
 import dao.AdministradorDao as adminDao
@@ -14,7 +13,6 @@ import dao.facebook.DaoExtraccionProp as DaoProp
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
-findspark.init("/home/arturo/Software/spark-2.2.3-bin-hadoop2.7")
 
 context = pspk.SparkContext.getOrCreate()
 sql_context = pysql.SQLContext(context)
@@ -54,6 +52,7 @@ for anuncio in grupo_de_anuncios.values.tolist():
         print(nom_archivo)
         dfrm_total_anuncios = Util.union_de_drfms_pandas(gpo_anunc_con_detalle)
         df_sp_total_anuncios = Util.pandas_a_spark(sql_context, dfrm_total_anuncios)
+        df_sp_total_anuncios.withColumnRenamed("WEBSITE_CTR", "SITIOWEB_CTR")
         df_sp_total_anuncios.coalesce(1).write.format('com.databricks.spark.csv').save(nom_archivo, header='true')
 
         Util.carga(df_sp_total_anuncios)
@@ -95,6 +94,9 @@ nom_archivo = 'hist_anuncios_' + Util.obt_fecha_actual() + '.csv'
 print(nom_archivo)
 dfrm_total_anuncios = Util.union_de_drfms_pandas(gpo_anunc_con_detalle)
 df_sp_total_anuncios = Util.pandas_a_spark(sql_context, dfrm_total_anuncios)
+
+df_sp_total_anuncios.withColumnRenamed("WEBSITE_CTR", "SITIOWEB_CTR")
+
 df_sp_total_anuncios.coalesce(1).write.format('com.databricks.spark.csv').save(nom_archivo, header='true')
 Util.carga(df_sp_total_anuncios)
 
