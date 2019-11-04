@@ -126,10 +126,10 @@ class DaoAnuncio(AdminDao.AnuncioABS):
 
     def obten_info_anuncio(self):
         comando = self.construye_consulta_curl()
-        #txt_info_anuncio = self.ejecuta_curl(comando)
-        #dict_anuncio = json.loads(txt_info_anuncio)
-        #df_info_anuncio = self.valida_informacion(dict_anuncio)
-        #return df_info_anuncio
+        txt_info_anuncio = self.ejecuta_curl(comando)
+        dict_anuncio = json.loads(txt_info_anuncio)
+        df_info_anuncio = self.valida_informacion(dict_anuncio)
+        return df_info_anuncio
 
 
 class DaoDesgloseGenerico(AdminDao.DaoDesgloseAbs):
