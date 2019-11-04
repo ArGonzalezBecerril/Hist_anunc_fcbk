@@ -56,6 +56,7 @@ for anuncio in grupo_de_anuncios.values.tolist():
         df_sp_total_anuncios = Util.pandas_a_spark(sql_context, dfrm_total_anuncios)
         df_sp_total_anuncios.coalesce(1).write.format('com.databricks.spark.csv').save(nom_archivo, header='true')
 
+        Util.carga(df_sp_total_anuncios)
         os.system("tail -n +5 total_anuncios.csv >> "
                   "total_anuncios2.csv && rm total_anuncios.csv "
                   "&& mv total_anuncios2.csv total_anuncios.csv")
@@ -95,6 +96,7 @@ print(nom_archivo)
 dfrm_total_anuncios = Util.union_de_drfms_pandas(gpo_anunc_con_detalle)
 df_sp_total_anuncios = Util.pandas_a_spark(sql_context, dfrm_total_anuncios)
 df_sp_total_anuncios.coalesce(1).write.format('com.databricks.spark.csv').save(nom_archivo, header='true')
+Util.carga(df_sp_total_anuncios)
 
 print("Finalizo el proceso final...")
 

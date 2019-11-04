@@ -123,3 +123,9 @@ def union_de_drfms_pandas(grupo_de_dfrm_pandas):
     except ValueError as e:
         print("El grupo de dataframes esta vacio:" + str(e))
 
+
+def carga(data_frm_spark):
+    datos_conx = obt_datos_conx('conx_oracle')
+    prop_conx = obt_prop_driver(datos_conx['driver'])
+    url_jdbc = datos_conx['url_jdbc']
+    data_frm_spark.write.jdbc(url=url_jdbc, table="ADS_INFO_ANUNCIO", mode='append', properties=prop_conx)
